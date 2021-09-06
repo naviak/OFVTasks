@@ -2,48 +2,37 @@ package Task1
 
 import scala.math.Fractional.Implicits.infixFractionalOps
 import scala.math.Ordered.orderingToOrdered
-//import org.apache.commons.math.util.MathUtils
 
 object FloatingPoint extends App{
 
   class FloatNumber[F](oneInSystem: F,base: F)(implicit ev: Fractional[F]) {
     private val one:F = oneInSystem
+    private val two:F = ev.plus(one,one)
     def epsilon(): F = {
-      lazy val s: LazyList[F] = one #:: s.map(f => ev.div(f, ev.plus(one, one)))
+      lazy val s: LazyList[F] = one #:: s.map(f => ev.div(f, two))
       s.takeWhile(e => ev.plus(e, one) != one).last
     }
 
     def maxExponent(): Int = {
-      lazy val s: LazyList[F] = one #:: s.map(f => ev.times(f, base))
+      lazy val s: LazyList[F] = one #:: s.map(f => ev.times(f, two))
       val ls = s.takeWhile(_ < ev.div(one,ev.minus(one,one))).toList
       ls.length - 1
     }
 
     def minExponent(): Int = {
-      lazy val s: LazyList[F] = one #:: s.map(f => ev.div(f, base))
+      lazy val s: LazyList[F] = one #:: s.map(f => ev.div(f, two))
       val ls = s.takeWhile(_ != ev.minus(one,one)).toList
-      ls.length - 1
+      -(ls.length - 1 - lazyNumMantiss)
     }
 
-    def loopNumMantiss(): Int = {
-      var zeroOne: F = ev.div(one,base)
-      var num: F = one + zeroOne
-      var counter: Int = 1
-       while(num != one){
-         zeroOne = ev.div(zeroOne,base)
-         num = one + zeroOne
-         counter += 1
-      }
-      counter
-    }
     def lazyNumMantiss(): Int = {
-      var zeroOne = ev.div(one,base)
-      lazy val s: LazyList[F] = (one + zeroOne) #:: s.map(f =>{
-        zeroOne = ev.div(zeroOne,base)
-        one + zeroOne
+      var zeroTwo = ev.div(one,two)
+      lazy val s: LazyList[F] = (one + zeroTwo) #:: s.map(f =>{
+        zeroTwo = ev.div(zeroTwo,two)
+        one + zeroTwo
       })
       val ls = s.takeWhile(_ != one).toList
-      ls.length + 1
+      ls.length
     }
   }
 
@@ -53,7 +42,6 @@ object FloatingPoint extends App{
   println(s"epsilon for Float:\t ${floatNumber.epsilon}")
   println(s"min exponent of Float:\t ${floatNumber.minExponent}")
   println(s"max exponent of Float:\t ${floatNumber.maxExponent}")
-  println(s"mantissa of Float calculated by using loop:\t ${floatNumber.loopNumMantiss}")
   println(s"mantissa of Float calculated by using lazy:\t ${floatNumber.lazyNumMantiss}")
 
   println("")
@@ -61,6 +49,5 @@ object FloatingPoint extends App{
   println(s"epsilon for Double:\t ${doubleNumber.epsilon}")
   println(s"min exponent of Double:\t ${doubleNumber.minExponent}")
   println(s"max exponent of Double:\t ${doubleNumber.maxExponent}")
-  println(s"mantissa of Double calculated by using loop:\t ${doubleNumber.loopNumMantiss}")
   println(s"mantissa of Double calculated by using lazy:\t ${doubleNumber.lazyNumMantiss}")
 }
