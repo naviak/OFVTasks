@@ -5,6 +5,7 @@ import scala.math.Ordered.orderingToOrdered
 //import org.apache.commons.math.util.MathUtils
 
 object FloatingPoint extends App{
+
   class FloatNumber[F](oneInSystem: F,base: F)(implicit ev: Fractional[F]) {
     private val one:F = oneInSystem
     def epsilon(): F = {
@@ -20,23 +21,46 @@ object FloatingPoint extends App{
 
     def minExponent(): Int = {
       lazy val s: LazyList[F] = one #:: s.map(f => ev.div(f, base))
-      val ls = s.takeWhile(_ != 0f).toList
+      val ls = s.takeWhile(_ != ev.minus(one,one)).toList
       ls.length - 1
+    }
+
+    def loopNumMantiss(): Int = {
+      var zeroOne: F = ev.div(one,base)
+      var num: F = one + zeroOne
+      var counter: Int = 1
+       while(num != one){
+         zeroOne = ev.div(zeroOne,base)
+         num = one + zeroOne
+         counter += 1
+      }
+      counter
+    }
+    def lazyNumMantiss(): Int = {
+      var zeroOne = ev.div(one,base)
+      lazy val s: LazyList[F] = (one + zeroOne) #:: s.map(f =>{
+        zeroOne = ev.div(zeroOne,base)
+        one + zeroOne
+      })
+      val ls = s.takeWhile(_ != one).toList
+      ls.length + 1
     }
   }
 
   val floatNumber = new FloatNumber(1.0f,10.0f)
   val doubleNumber = new FloatNumber(1.0,10.0)
 
-  val s: LazyList[Float] = 1f #:: s.map(f => f / 10f)
-  val ls = s.takeWhile(_ < 1f).toList
+  println(s"epsilon for Float:\t ${floatNumber.epsilon}")
+  println(s"min exponent of Float:\t ${floatNumber.minExponent}")
+  println(s"max exponent of Float:\t ${floatNumber.maxExponent}")
+  println(s"mantissa of Float calculated by using loop:\t ${floatNumber.loopNumMantiss}")
+  println(s"mantissa of Float calculated by using lazy:\t ${floatNumber.lazyNumMantiss}")
 
-  println(floatNumber.epsilon)
-  println(floatNumber.minExponent)
-  println(floatNumber.maxExponent)
+  println("")
 
-  println(doubleNumber.epsilon)
-  println(doubleNumber.minExponent)
-  println(doubleNumber.maxExponent)
-  println(1f/0f)
+  println(s"epsilon for Double:\t ${doubleNumber.epsilon}")
+  println(s"min exponent of Double:\t ${doubleNumber.minExponent}")
+  println(s"max exponent of Double:\t ${doubleNumber.maxExponent}")
+  println(s"mantissa of Double calculated by using loop:\t ${doubleNumber.loopNumMantiss}")
+  println(s"mantissa of Double calculated by using lazy:\t ${doubleNumber.lazyNumMantiss}")
 }
