@@ -5,7 +5,7 @@ import scala.annotation.tailrec
 final class Dichotomy extends Method {
   val fa = ChrestomaticEquation.f(ChrestomaticEquation.start)
 
-  def solve(x0: Double, f: (Double) => Double, eps: Double): Double = {
+  def solve(x0: Double, f: Double => Double, eps: Double): Double = {
     @tailrec
     def bis(a: Double, b: Double, eps: Double, iter: Int): Double = {
       val m = (a + b) / 2

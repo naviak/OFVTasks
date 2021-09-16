@@ -2,6 +2,7 @@
 import breeze.linalg._
 import breeze.plot._
 import breeze.optimize._
+
 object QuantEquation {
   object ChrestomaticEquation {
     val a = 10
@@ -30,7 +31,7 @@ object QuantEquation {
       }
       p += plot(x, y)
 
-      val sol = method.solve(-4.7, f,1e-10)
+      val sol = method.solve(-4.7, f, 1e-10)
       p += plot(DenseVector.fill(1000)(sol), linspace(-120000, 120000, 1000), '.')
       println(f(sol))
       p.xlabel = "x axis"
@@ -38,11 +39,12 @@ object QuantEquation {
       fig.refresh()
     }
   }
-  def main(args:Array[String]): Unit = {
+
+  def main(args: Array[String]): Unit = {
     val newton = new Newton()
     val iter = new SimpleIterations()
     val dich = new Dichotomy()
-      ChrestomaticEquation.plotF(iter)
+    ChrestomaticEquation.plotF(iter)
   }
 
 }
