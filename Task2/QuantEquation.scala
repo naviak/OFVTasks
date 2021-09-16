@@ -38,7 +38,6 @@ object QuantEquation {
       fig.refresh()
     }
   }
-  case class Solver(method: Newton, occupation: String)
   def main(args:Array[String]): Unit = {
     val newton = new Newton()
     val iter = new SimpleIterations()
