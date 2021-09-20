@@ -1,7 +1,7 @@
 package Integral
 
-case class Trapezoidal(f: Double => Double) extends Solver {
+case class Trapezoidal[T <: Function](function: T) extends Solver {
   override def method(x1: Double, x2: Double): Double = {
-    math.abs(x2-x1) * (f(x1) + f(x2)) / 2.0
+    math.abs(x2-x1) * (function.f(x1) + function.f(x2)) / 2.0
   }
 }
