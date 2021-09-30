@@ -1,6 +1,7 @@
 package Bessel
 
 import breeze.linalg.linspace
+import breeze.plot.{Figure, plot}
 
 
 object Bessel extends App {
@@ -46,4 +47,10 @@ object Bessel extends App {
     println(result)
     x += 0.1
   }
+  val fig = Figure()
+  val p = fig.subplot(0)
+  val xx = linspace(0,20,4000)
+  p += plot(xx, xx.map(t => besselFunction(t,0)))
+  p += plot(xx,xx.map(t => besselFunction(t,1)))
+  fig.refresh
 }
