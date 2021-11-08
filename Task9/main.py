@@ -2,7 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 
-def shuttle_method(x: np.array, a: np.array, b: np.array, c: np.array, d: np.array, init_cond: np.array) -> np.array:
+def shuttle_method(x: np.array, a: np.array, b: np.array, c: np.array, d: np.array, init_cond: np.array):
     alpha = np.zeros_like(x)
     beta = np.zeros_like(x)
     y = np.zeros_like(x)
@@ -22,7 +22,7 @@ def shuttle_method(x: np.array, a: np.array, b: np.array, c: np.array, d: np.arr
     return y
 
 
-def dif_solver(x: np.array, init_cond: np.array, p: np.array = None, q: np.array = None, r: np.array = None) -> np.array:
+def dif_solver(x: np.array, init_cond: np.array, p: np.array = None, q: np.array = None, r: np.array = None):
     # Приводит К каноническому виду
     if p is None:
         p = np.zeros_like(x)
